@@ -1,86 +1,52 @@
 
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html>
 <head>
   <title>Djila</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Carte -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
-<body style="font-family: Arial; margin:0; background:#f5f5f5;">
+<body style="margin:0; font-family:Arial;">
 
   <div style="background:#111; color:white; padding:15px; text-align:center;">
-    <h2>DJILA</h2>
-    <p>Alertes en temps réel</p>
+    <h2>DJILA MAPS</h2>
+    <p>Signalements en Côte d’Ivoire</p>
   </div>
 
-  <div style="padding:15px;">
+  <div id="map" style="height:60vh;"></div>
 
-    <h3>🚨 Signaler un problème</h3>
+  <div style="padding:10px;">
 
-    <button onclick="addAlert('Accident')"
-      style="padding:15px; width:100%; margin-bottom:10px;">
-      Accident
+    <button onclick="addMarker('Accident')" style="padding:10px; width:100%; margin-bottom:5px;">
+      🚨 Accident
     </button>
 
-    <button onclick="addAlert('Embouteillage')"
-      style="padding:15px; width:100%; margin-bottom:10px;">
-      Embouteillage
+    <button onclick="addMarker('Embouteillage')" style="padding:10px; width:100%; margin-bottom:5px;">
+      🚗 Embouteillage
     </button>
 
-    <button onclick="addAlert('Route bloquée')"
-      style="padding:15px; width:100%; margin-bottom:10px;">
-      Route bloquée
-    </button>
-
-    <hr>
-
-    <h3>📍 Alertes en direct</h3>
-
-    <ul id="alerts"></ul>
-
-    <button onclick="clearAlerts()"
-      style="margin-top:10px; padding:10px;">
-      Effacer les alertes
+    <button onclick="addMarker('Route bloquée')" style="padding:10px; width:100%;">
+      ⛔ Route bloquée
     </button>
 
   </div>
 
 <script>
-// Charger les alertes sauvegardées
-let alerts = JSON.parse(localStorage.getItem("djila_alerts")) || [];
+let map = L.map('map').setView([5.36, -4.008], 12); // Abidjan
 
-updateList();
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+}).addTo(map);
 
-// Ajouter une alerte
-function addAlert(type) {
-  let time = new Date().toLocaleTimeString();
-
-  let alertText = type + " - " + time;
-
-  alerts.unshift(alertText);
-
-  localStorage.setItem("djila_alerts", JSON.stringify(alerts));
-
-  updateList();
-}
-
-// Mettre à jour l’affichage
-function updateList() {
-  let list = document.getElementById("alerts");
-  list.innerHTML = "";
-
-  for (let i = 0; i < alerts.length; i++) {
-    let li = document.createElement("li");
-    li.innerHTML = "⚠️ " + alerts[i];
-    list.appendChild(li);
-  }
-}
-
-// Effacer les alertes
-function clearAlerts() {
-  alerts = [];
-  localStorage.removeItem("djila_alerts");
-  updateList();
+function addMarker(type) {
+  let marker = L.marker([5.36 + (Math.random()-0.5)*0.02, -4.008 + (Math.random()-0.5)*0.02])
+    .addTo(map)
+    .bindPopup("⚠️ " + type)
+    .openPopup();
 }
 </script>
 
