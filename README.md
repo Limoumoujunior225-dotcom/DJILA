@@ -9,35 +9,60 @@
 
   <div style="background:#111; color:white; padding:15px; text-align:center;">
     <h2>DJILA</h2>
-    <p>Ton monde en temps réel</p>
+    <p>Alertes en temps réel</p>
   </div>
 
   <div style="padding:15px;">
 
     <h3>🚨 Signaler un problème</h3>
 
-    <button onclick="alert('Signal envoyé !')"
+    <button onclick="addAlert('Accident')"
       style="padding:15px; width:100%; margin-bottom:10px;">
       Accident
     </button>
 
-    <button onclick="alert('Signal envoyé !')"
+    <button onclick="addAlert('Embouteillage')"
       style="padding:15px; width:100%; margin-bottom:10px;">
       Embouteillage
     </button>
 
-    <button onclick="alert('Signal envoyé !')"
+    <button onclick="addAlert('Route bloquée')"
       style="padding:15px; width:100%; margin-bottom:10px;">
       Route bloquée
     </button>
 
     <hr>
 
-    <h3>📍 Alertes récentes</h3>
+    <h3>📍 Alertes en direct</h3>
 
-    <p>⚠️ Aucun signalement pour le moment</p>
+    <ul id="alerts"></ul>
 
   </div>
+
+<script>
+let alerts = [];
+
+function addAlert(type) {
+  let time = new Date().toLocaleTimeString();
+
+  let alertText = type + " - " + time;
+
+  alerts.unshift(alertText);
+
+  updateList();
+}
+
+function updateList() {
+  let list = document.getElementById("alerts");
+  list.innerHTML = "";
+
+  for (let i = 0; i < alerts.length; i++) {
+    let li = document.createElement("li");
+    li.innerHTML = "⚠️ " + alerts[i];
+    list.appendChild(li);
+  }
+}
+</script>
 
 </body>
 </html>
